@@ -30,20 +30,6 @@ let authors = [
   },
 ]
 
-/*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- *
- * English:
- * It might make more sense to associate a book with its author by storing the author's id in the context of the book instead of the author's name
- * However, for simplicity, we will store the author's name in connection with the book
- *
- * Spanish:
- * Podría tener más sentido asociar un libro con su autor almacenando la id del autor en el contexto del libro en lugar del nombre del autor
- * Sin embargo, por simplicidad, almacenaremos el nombre del autor en conección con el libro
-*/
-
 let books = [
   {
     title: 'Clean Code',
@@ -96,10 +82,6 @@ let books = [
   },
 ]
 
-/*
-  you can remove the placeholder query once your first own has been implemented 
-*/
-
 const typeDefs = `
   type Query {
     bookCount: Int!
@@ -117,7 +99,7 @@ const typeDefs = `
   type Book{
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: ID!
     genres: [String!]!
   }
@@ -157,17 +139,24 @@ const resolvers = {
       }
     },
     allAuthors: () => {
-      const authorsArray = authors.map(author => {
-        const booksWritten = books.filter(book => book.author === author.name).length
-        const authorNew = { ...author, bookCount: booksWritten }
-        return (authorNew)
-      })
-      return authorsArray
+      return authors
+    }
+  },
+  Book: {
+    author: (root) => {
+      return authors.find(author => author.name === root.author)
+    }
+  },
+  Author: {
+    bookCount: (root) => {
+      return books.filter(book => book.author === root.name).length
     }
   },
   Mutation: {
     addBook: (root, args) => {
       const book = { ...args, id: uuid() }
+      const author = { name: args.author, born: null }
+      authors = authors.concat(author)
       books = books.concat(book)
       return book
     },
