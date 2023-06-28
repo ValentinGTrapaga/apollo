@@ -1,7 +1,6 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 const { GraphQLError } = require('graphql')
-const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const Person = require('./models/person')
 const User = require('./models/user')
@@ -102,7 +101,7 @@ const resolvers = {
       if (!currentUser) {
         throw new GraphQLError('Not authenticated', {
           extensions: {
-            code: 'BAS_USER_INPUT'
+            code: 'BAD_USER_INPUT'
           }
         })
       }
