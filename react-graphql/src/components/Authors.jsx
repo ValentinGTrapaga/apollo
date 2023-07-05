@@ -1,16 +1,10 @@
-import { useMutation, useQuery } from '@apollo/client'
-import { ALL_AUTHORS, EDIT_BIRTH } from '../queries'
+import { useQuery } from '@apollo/client'
+import { ALL_AUTHORS } from '../queries'
 import { useState } from 'react'
 import { EditAuthorBirthYearForm } from './EditAuthorBirthYearForm'
 
-const Authors = (props) => {
-  if (!props.show) {
-    return null
-  }
-
+const Authors = () => {
   const result = useQuery(ALL_AUTHORS)
-
-  console.log(result)
 
   if (result.loading) {
     return <h1>Loading the data...</h1>
@@ -29,7 +23,7 @@ const Authors = (props) => {
             <th>books</th>
           </tr>
           {result.data.allAuthors.map((a) => (
-            <tr key={a.name}>
+            <tr key={a.id}>
               <td>{a.name}</td>
               <td>{a.born}</td>
               <td>{a.bookCount}</td>

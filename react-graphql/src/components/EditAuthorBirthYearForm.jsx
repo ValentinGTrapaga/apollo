@@ -3,37 +3,36 @@ import { useState } from 'react'
 import { ALL_AUTHORS, EDIT_BIRTH } from '../queries'
 
 export const EditAuthorBirthYearForm = ({authors}) => {
-  
-  const [name, setName] = useState('')
-  const [born, setBorn] = useState('') 
   const [error, setError] = useState(null)
 
   const [ editBirth ] = useMutation(EDIT_BIRTH, {
     refetchQueries: [ALL_AUTHORS],
     onError: (error) => {
-      setError(error.graphQLErrors[0].message)
+      console.log(error.graphQLErrors[0].message)
     }
   })
 
-
   const modifyYear = (e) => {
     e.preventDefault()
-    console.log({name, born})
-    editBirth({variables: {name, birth: Number(born)}})
+    const {name, year} = Object.fromEntries(new FormData(e.target))
+    console.log({name, year})
+    editBirth({variables: {name, birth: Number(year)}})
   }
 
   return (
     <>
     <legend>
+      <h2>
         Modify an author year of birth
+      </h2>
       <form onSubmit={modifyYear}>
         <label>
-          Name: <select value={name} onChange={(e) => setName(e.target.value)}>
-            {authors.map(author  => (<option key={author}>{author}</option>))}
+          Name: <select name='name' defaultValue={authors[0]}>
+            {authors?.map(author  => (<option key={author}>{author}</option>))}
             </select>
         </label>
         <label>
-          Born: <input type='number' onChange={(e) => setBorn(e.target.value)}/>
+          Born: <input type='number' name='year' />
         </label>
         <button>Modify</button>
       </form>

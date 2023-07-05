@@ -20,8 +20,6 @@ const NewBook = () => {
       variables: { title, author, published: Number(published), genres }
     })
 
-    console.log('add book...')
-
     setTitle('')
     setPublished('')
     setAuthor('')
@@ -70,7 +68,7 @@ const NewBook = () => {
             add genre
           </button>
         </div>
-        <div>genres: {genres.join(' ')}</div>
+        <div>genres: {genres.join(', ')}</div>
         <button type='submit'>create book</button>
       </form>
     </div>

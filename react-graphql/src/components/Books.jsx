@@ -1,20 +1,26 @@
-import { useQuery } from "@apollo/client"
-import { ALL_BOOKS } from "../queries"
+import { useEffect, useState } from 'react'
+import { FilterButtons } from './FilterButtons'
 
-const Books = (props) => {
-  if (!props.show) {
-    return null
-  }
+const Books = ({ booksArray, refetch }) => {
+  const [filter, setFilter] = useState('')
 
-  const {loading, data} = useQuery(ALL_BOOKS)
+  const booksToShow =
+    filter === ''
+      ? booksArray
+      : booksArray.filter((book) => book.genres.includes(filter))
 
-  if(loading) {
-    return <h1>Loading the data...</h1>
-  }
+  useEffect(() => {
+    refetch({genre: filter})
+  }, [filter])
 
   return (
     <div>
       <h2>books</h2>
+      <FilterButtons
+        booksArray={booksArray}
+        setFilter={setFilter}
+      />
+      <button onClick={() => setFilter('')}>Reset filter</button>
 
       <table>
         <tbody>
@@ -23,15 +29,16 @@ const Books = (props) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {data.allBooks.map((a) => (
-            <tr key={a.title}>
+          {booksToShow?.map((a) => (
+            <tr key={a.id}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           ))}
         </tbody>
       </table>
+
     </div>
   )
 }

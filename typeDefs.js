@@ -1,3 +1,4 @@
+const typeDefs = `
 type Query {
   bookCount: Int!
   authorCount: Int!
@@ -11,6 +12,7 @@ type Author {
   name: String!
   born: Int
   bookCount: Int!
+  id: ID!
 }
 
 type User {
@@ -45,3 +47,10 @@ type Mutation {
 
   login(username: String!, password: String!): Token
 }
+
+type Subscription {
+  bookAdded: Book!
+}
+`
+
+module.exports = typeDefs
